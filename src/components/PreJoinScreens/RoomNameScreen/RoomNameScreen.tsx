@@ -1,15 +1,32 @@
 import React, { ChangeEvent, FormEvent } from 'react';
-import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
+import {
+  makeStyles,
+  TextField,
+  Grid,
+  Button,
+  Typography,
+  Checkbox,
+  Theme,
+  Card,
+  CardMedia,
+  Link,
+} from '@material-ui/core';
 import { useAppState } from '../../../state';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
     marginBottom: '1em',
   },
+  CheckboxContainer: {
+    display: 'flex',
+  },
+  checklabel: {
+    display: 'flex',
+  },
   inputContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    margin: '1.5em 0 3.5em',
+    margin: '2.5em 0 1.5em',
     '& div:not(:last-child)': {
       marginRight: '1em',
     },
@@ -30,12 +47,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface RoomNameScreenProps {
   name: string;
   roomName: string;
+  decoded: any;
   setName: (name: string) => void;
   setRoomName: (roomName: string) => void;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-export default function RoomNameScreen({ name, roomName, setName, setRoomName, handleSubmit }: RoomNameScreenProps) {
+export default function RoomNameScreen({
+  name,
+  roomName,
+  decoded,
+  setName,
+  setRoomName,
+  handleSubmit,
+}: RoomNameScreenProps) {
+  const [checked, setChecked] = React.useState(true);
   const classes = useStyles();
   const { user } = useAppState();
 
@@ -47,29 +73,37 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
     setRoomName(event.target.value);
   };
 
+  const handleChange = (event: any) => {
+    setChecked(event.target.checked);
+  };
+
+  const handleDisclosure = (event: any) => {
+    event.preventDefault();
+    window.open(`https://servicehubcrm.net/#/virtual-disclosure/${decoded.company_id}`);
+  };
+
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
   return (
     <>
-      <Typography variant="h5" className={classes.gutterBottom}>
-        Join a Room
-      </Typography>
-      <Typography variant="body1">
-        {hasUsername
-          ? "Enter the name of a room you'd like to join."
-          : "Enter your name and the name of a room you'd like to join"}
-      </Typography>
+      <Card>
+        <CardMedia
+          component="img"
+          height="200"
+          image="https://storage.servicehubcrm.net/dev/user_profile/userprofile_2819_gKVkEOtFIZ.jpg"
+          alt="imagen crm company"
+        />
+      </Card>
       <form onSubmit={handleSubmit}>
         <div className={classes.inputContainer}>
           {!hasUsername && (
             <div className={classes.textFieldContainer}>
-              <InputLabel shrink htmlFor="input-user-name">
-                Your Name
-              </InputLabel>
               <TextField
                 id="input-user-name"
-                variant="outlined"
+                variant="standard"
                 fullWidth
+                label="Your Name"
+                helperText="We recommend this name, you can change it freely"
                 size="small"
                 value={name}
                 onChange={handleNameChange}
@@ -77,13 +111,12 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
             </div>
           )}
           <div className={classes.textFieldContainer}>
-            <InputLabel shrink htmlFor="input-room-name">
-              Room Name
-            </InputLabel>
             <TextField
+              disabled
               autoCapitalize="false"
               id="input-room-name"
-              variant="outlined"
+              variant="standard"
+              label="Room Name"
               fullWidth
               size="small"
               value={roomName}
@@ -91,15 +124,29 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
             />
           </div>
         </div>
+        <div className={classes.CheckboxContainer}>
+          <Checkbox
+            checked={checked}
+            size="small"
+            color="secondary"
+            onChange={handleChange}
+            inputProps={{ 'aria-label': 'controlled' }}
+          />
+          <Typography variant="caption" className={classes.checklabel}>
+            <Link component="button" disabled={!decoded.company_id} onClick={handleDisclosure}>
+              I agree to Disclosures
+            </Link>
+          </Typography>
+        </div>
         <Grid container justifyContent="flex-end">
           <Button
             variant="contained"
             type="submit"
             color="primary"
-            disabled={!name || !roomName}
+            disabled={!name || !roomName || !checked}
             className={classes.continueButton}
           >
-            Continue
+            Join a Room
           </Button>
         </Grid>
       </form>
