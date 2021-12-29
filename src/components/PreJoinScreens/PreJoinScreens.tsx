@@ -35,7 +35,7 @@ export enum Steps {
 export default function PreJoinScreens() {
   const { user } = useAppState();
   const { getAudioAndVideoTracks } = useVideoContext();
-  const { URLRoomName } = useParams();
+  const { URLRoomName, Crm } = useParams();
   const [step, setStep] = useState(Steps.roomNameStep);
   const [name, setName] = useState<string>(user?.displayName || '');
   const [roomName, setRoomName] = useState<string>('');
@@ -46,7 +46,6 @@ export default function PreJoinScreens() {
   useEffect(() => {
     if (URLRoomName) {
       setRoomName(URLRoomName);
-
       var docRef = servicehubcrmvideocallFb.doc(URLRoomName);
       docRef
         .get()
@@ -54,11 +53,11 @@ export default function PreJoinScreens() {
           if (doc.exists) {
             var decoded = jwt.decode(doc.data().token);
             const hour = (decoded.expTokenVideo - moment.utc().valueOf() / 1000) / 3600;
-            if (hour < 0 || doc.data().expTokenVideo != decoded.expTokenVideo) {
+            /* if (hour < 0 || doc.data().expTokenVideo != decoded.expTokenVideo) {
               window.location.assign(`https://servicehubcrm.net/#/payment-expire/${decoded.company_id}`);
               return;
-            }
-            setName(decoded.userName);
+            } */
+            Crm === '1' ? setName(decoded.costumerName) : setName(decoded.userName);
             setDecoded(decoded);
           } else {
             window.alert('You do not have permission to make video call');
