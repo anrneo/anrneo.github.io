@@ -7,7 +7,6 @@ import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 import { useAppState } from '../../state';
 import { useParams } from 'react-router-dom';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import { Button, Snackbar } from '@material-ui/core';
 import moment from 'moment';
 import firebase from 'firebase';
 // Required for side-effects
@@ -41,7 +40,6 @@ export default function PreJoinScreens() {
   const [roomName, setRoomName] = useState<string>('');
   const [decoded, setDecoded] = useState<object>({});
   const [mediaError, setMediaError] = useState<Error>();
-  const [isSnackbarDismissed, setIsSnackbarDismissed] = useState(false);
 
   useEffect(() => {
     if (URLRoomName) {
@@ -53,10 +51,10 @@ export default function PreJoinScreens() {
           if (doc.exists) {
             var decoded = jwt.decode(doc.data().token);
             const hour = (decoded.expTokenVideo - moment.utc().valueOf() / 1000) / 3600;
-            /* if (hour < 0 || doc.data().expTokenVideo != decoded.expTokenVideo) {
+            if (hour < 0 || doc.data().expTokenVideo != decoded.expTokenVideo) {
               window.location.assign(`https://servicehubcrm.net/#/payment-expire/${decoded.company_id}`);
               return;
-            } */
+            }
             Crm === '1' ? setName(decoded.costumerName) : setName(decoded.userName);
             setDecoded(decoded);
           } else {
