@@ -9,9 +9,17 @@ pipelines:
   branches:
     main:
       - step:
-          name: deploy heroku
+          name: deploy heroku testcrmvideocall
           caches:
             - node
           script:
             - git fetch --all --unshallow
             - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git
+    master:
+      - step:
+          name: deploy heroku servicehubcrmvideocall
+          caches:
+            - node
+          script:
+            - git fetch --all --unshallow
+            - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_PRO.git
