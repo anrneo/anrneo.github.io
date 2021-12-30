@@ -9,6 +9,7 @@ import StartRecordingIcon from '../../../icons/StartRecordingIcon';
 import StopRecordingIcon from '../../../icons/StopRecordingIcon';
 import SearchIcon from '@material-ui/icons/Search';
 import SettingsIcon from '../../../icons/SettingsIcon';
+import { useParams } from 'react-router-dom';
 import {
   Button,
   styled,
@@ -42,7 +43,7 @@ export default function Menu(props: { buttonClassName?: string }) {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-
+  const { Crm } = useParams();
   const { isFetching, updateRecordingRules, roomType } = useAppState();
   const { setIsChatWindowOpen } = useChatContext();
   const isRecording = useIsRecording();
@@ -114,7 +115,7 @@ export default function Menu(props: { buttonClassName?: string }) {
 
         {roomType !== 'peer-to-peer' && roomType !== 'go' && (
           <MenuItem
-            disabled={isFetching}
+            disabled={isFetching || Crm == '1'}
             onClick={() => {
               setMenuOpen(false);
               if (isRecording) {
