@@ -90,7 +90,7 @@ export default function RoomNameScreen({
         <CardMedia
           component="img"
           height="200"
-          image="https://storage.servicehubcrm.net/dev/user_profile/userprofile_2819_gKVkEOtFIZ.jpg"
+          image={'https://storage.servicehubcrm.net/dev/user_profile/' + decoded.urlLogo}
           alt="imagen crm company"
         />
       </Card>
