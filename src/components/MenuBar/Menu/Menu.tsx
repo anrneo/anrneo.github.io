@@ -115,7 +115,7 @@ export default function Menu(props: { buttonClassName?: string }) {
 
         {roomType !== 'peer-to-peer' && roomType !== 'go' && (
           <MenuItem
-            disabled={isFetching || Crm == '1'}
+            disabled={isFetching || Crm === '1'}
             onClick={() => {
               setMenuOpen(false);
               if (isRecording) {

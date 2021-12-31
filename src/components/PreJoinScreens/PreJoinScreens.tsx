@@ -49,14 +49,14 @@ export default function PreJoinScreens() {
         .get()
         .then((doc: any) => {
           if (doc.exists) {
-            var decoded = jwt.decode(doc.data().token);
-            const hour = (decoded.expTokenVideo - moment.utc().valueOf() / 1000) / 3600;
-            if (hour < 0 || doc.data().expTokenVideo != decoded.expTokenVideo) {
-              window.location.assign(`https://servicehubcrm.net/#/payment-expire/${decoded.company_id}`);
+            let tokenData = jwt.decode(doc.data().token);
+            const hour = (tokenData.expTokenVideo - moment.utc().valueOf() / 1000) / 3600;
+            if (hour < 0 || doc.data().expTokenVideo != tokenData.expTokenVideo) {
+              window.location.assign(`https://servicehubcrm.net/#/payment-expire/${tokenData.company_id}`);
               return;
             }
-            Crm === '1' ? setName(decoded.costumerName) : setName(decoded.userName);
-            setDecoded(decoded);
+            Crm === '1' ? setName(tokenData.costumerName) : setName(tokenData.userName);
+            setDecoded(tokenData);
           } else {
             window.alert('You do not have permission to make video call');
           }
@@ -69,7 +69,7 @@ export default function PreJoinScreens() {
         setStep(Steps.deviceSelectionStep);
       }
     }
-  }, [user, URLRoomName]);
+  }, [user, URLRoomName, Crm]);
 
   useEffect(() => {
     if (step === Steps.deviceSelectionStep && !mediaError) {
