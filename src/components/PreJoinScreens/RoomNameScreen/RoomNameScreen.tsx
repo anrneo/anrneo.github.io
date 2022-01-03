@@ -10,7 +10,6 @@ import {
   Card,
   CardMedia,
   Link,
-  CardContent,
 } from '@material-ui/core';
 import { useAppState } from '../../../state';
 
