@@ -70,7 +70,6 @@ export default function RoomNameScreen({
   const [checked, setChecked] = React.useState(true);
   const classes = useStyles();
   const { user } = useAppState();
-  console.log(decoded);
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
