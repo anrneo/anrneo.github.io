@@ -10,12 +10,18 @@ import {
   Card,
   CardMedia,
   Link,
+  CardContent,
 } from '@material-ui/core';
 import { useAppState } from '../../../state';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
     marginBottom: '1em',
+  },
+  media: {
+    width: 200,
+    display: 'block',
+    margin: 'auto',
   },
   CheckboxContainer: {
     display: 'flex',
@@ -64,6 +70,7 @@ export default function RoomNameScreen({
   const [checked, setChecked] = React.useState(true);
   const classes = useStyles();
   const { user } = useAppState();
+  console.log(decoded);
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -86,13 +93,17 @@ export default function RoomNameScreen({
 
   return (
     <>
-      <Card>
+      <Card style={{ marginTop: 0 }}>
         <CardMedia
+          className={classes.media}
           component="img"
           height="200"
           image={'https://storage.servicehubcrm.net/dev/user_profile/' + decoded.urlLogo}
           alt="imagen crm company"
         />
+        <Typography gutterBottom variant="subtitle2" component="div" align="center">
+          Order {decoded.orderNo}
+        </Typography>
       </Card>
       <form onSubmit={handleSubmit}>
         <div className={classes.inputContainer}>
@@ -124,30 +135,33 @@ export default function RoomNameScreen({
             />
           </div>
         </div>
-        <div className={classes.CheckboxContainer}>
-          <Checkbox
-            checked={checked}
-            size="small"
-            color="secondary"
-            onChange={handleChange}
-            inputProps={{ 'aria-label': 'controlled' }}
-          />
-          <Typography variant="caption" className={classes.checklabel}>
-            <Link component="button" disabled={!decoded.company_id} onClick={handleDisclosure}>
-              I agree to Disclosures
-            </Link>
-          </Typography>
-        </div>
-        <Grid container justifyContent="flex-end">
-          <Button
-            variant="contained"
-            type="submit"
-            color="primary"
-            disabled={!name || !roomName || !checked}
-            className={classes.continueButton}
-          >
-            Join a Room
-          </Button>
+
+        <Grid container>
+          <Grid xs={8} className={classes.CheckboxContainer}>
+            <Checkbox
+              checked={checked}
+              size="small"
+              color="secondary"
+              onChange={handleChange}
+              inputProps={{ 'aria-label': 'controlled' }}
+            />
+            <Typography variant="caption" className={classes.checklabel}>
+              <Link component="button" disabled={!decoded.company_id} onClick={handleDisclosure}>
+                I agree to Disclosures
+              </Link>
+            </Typography>
+          </Grid>
+          <Grid xs={4}>
+            <Button
+              className={classes.continueButton}
+              variant="contained"
+              type="submit"
+              color="primary"
+              disabled={!name || !roomName || !checked}
+            >
+              Join a Room
+            </Button>
+          </Grid>
         </Grid>
       </form>
     </>

@@ -51,10 +51,10 @@ export default function PreJoinScreens() {
           if (doc.exists) {
             let tokenData = jwt.decode(doc.data().token);
             const hour = (tokenData.expTokenVideo - moment.utc().valueOf() / 1000) / 3600;
-            if (hour < 0 || doc.data().expTokenVideo != tokenData.expTokenVideo) {
+            /* if (hour < 0 || doc.data().expTokenVideo != tokenData.expTokenVideo) {
               window.location.assign(`https://servicehubcrm.net/#/payment-expire/${tokenData.company_id}`);
               return;
-            }
+            } */
             Crm === '1' ? setName(tokenData.costumerName) : setName(tokenData.userName);
             setDecoded(tokenData);
           } else {
