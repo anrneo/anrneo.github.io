@@ -32,8 +32,8 @@ export default function PreJoinScreens() {
         .then((tokenData: any) => {
           if (tokenData) {
             const hour = (tokenData.decode.expTokenVideo - moment.utc().valueOf() / 1000) / 3600;
-            if (hour < 0 || tokenData.data.expTokenVideo != tokenData.decoded.expTokenVideo) {
-              window.location.assign(`https://servicehubcrm.net/#/payment-expire/${tokenData.company_id}`);
+            if (hour < 0 || tokenData.data.expTokenVideo != tokenData.decode.expTokenVideo) {
+              window.location.assign(`https://servicehubcrm.net/#/payment-expire/${tokenData.decode.company_id}`);
               return;
             }
             Crm === '1' ? setName(tokenData.decode.costumerName) : setName(tokenData.decode.userName);
