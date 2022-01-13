@@ -4,26 +4,7 @@ import Video, { ConnectOptions, LocalTrack, Room } from 'twilio-video';
 import { VideoRoomMonitor } from '@twilio/video-room-monitor';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import firebase from 'firebase';
-// Required for side-effects
-require('firebase/firestore');
-// TODO: Replace the following with your app's Firebase project configuration
-
-firebase.initializeApp(
-  {
-    apiKey: 'AIzaSyCaPei14v0aK2d2eHI52edQprnESNYTg6c',
-    authDomain: 'servicehub-crm-web.firebaseapp.com',
-    databaseURL: 'https://servicehub-crm-web.firebaseio.com',
-    projectId: 'servicehub-crm-web',
-    storageBucket: 'servicehub-crm-web.appspot.com',
-    messagingSenderId: '638969901476',
-    appId: '1:638969901476:web:df906c852aa9138434d131',
-    measurementId: 'G-4ZV0C6QKFV',
-  },
-  'roomDb'
-);
-var db = firebase.app('roomDb').firestore();
-var servicehubcrmvideocallFb = db.collection('servicehubcrmvideocallFb');
+import FirebaseApp from '../../../state/useFirebaseAuth/FirebaseApp';
 
 // @ts-ignore
 window.TwilioVideo = Video;
@@ -52,10 +33,7 @@ export default function useRoom(localTracks: LocalTrack[], onError: Callback, op
               const link = `https://SK9f831e2b412d713de37cfc55a8cea11b:qTjghG0SSdH5qU0joh5H8lFA993KugZm@${
                 datavideo.result.links.media.split('//')[1]
               }`;
-              servicehubcrmvideocallFb.doc(URLRoomName).update({
-                rm: newRoom.sid,
-                link: link,
-              });
+              FirebaseApp().update(URLRoomName, { rm: newRoom.sid, link: link });
             });
           setRoom(newRoom);
           VideoRoomMonitor.registerVideoRoom(newRoom);

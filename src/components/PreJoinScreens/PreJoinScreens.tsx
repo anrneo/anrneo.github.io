@@ -1,5 +1,4 @@
 import React, { useState, useEffect, FormEvent } from 'react';
-
 import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
 import IntroContainer from '../IntroContainer/IntroContainer';
 import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
@@ -8,23 +7,7 @@ import { useAppState } from '../../state';
 import { useParams } from 'react-router-dom';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import moment from 'moment';
-import firebase from 'firebase';
-// Required for side-effects
-require('firebase/firestore');
-// TODO: Replace the following with your app's Firebase project configuration
-firebase.initializeApp({
-  apiKey: 'AIzaSyCaPei14v0aK2d2eHI52edQprnESNYTg6c',
-  authDomain: 'servicehub-crm-web.firebaseapp.com',
-  databaseURL: 'https://servicehub-crm-web.firebaseio.com',
-  projectId: 'servicehub-crm-web',
-  storageBucket: 'servicehub-crm-web.appspot.com',
-  messagingSenderId: '638969901476',
-  appId: '1:638969901476:web:df906c852aa9138434d131',
-  measurementId: 'G-4ZV0C6QKFV',
-});
-var db = firebase.firestore();
-var servicehubcrmvideocallFb = db.collection('servicehubcrmvideocallFb');
-var jwt = require('jsonwebtoken');
+import FirebaseApp from '../../state/useFirebaseAuth/FirebaseApp';
 
 export enum Steps {
   roomNameStep,
@@ -44,19 +27,17 @@ export default function PreJoinScreens() {
   useEffect(() => {
     if (URLRoomName) {
       setRoomName(URLRoomName);
-      var docRef = servicehubcrmvideocallFb.doc(URLRoomName);
-      docRef
-        .get()
-        .then((doc: any) => {
-          if (doc.exists) {
-            let tokenData = jwt.decode(doc.data().token);
-            const hour = (tokenData.expTokenVideo - moment.utc().valueOf() / 1000) / 3600;
-            if (hour < 0 || doc.data().expTokenVideo != tokenData.expTokenVideo) {
+      FirebaseApp()
+        .tokenDataCrm(URLRoomName)
+        .then((tokenData: any) => {
+          if (tokenData) {
+            const hour = (tokenData.decode.expTokenVideo - moment.utc().valueOf() / 1000) / 3600;
+            if (hour < 0 || tokenData.data.expTokenVideo != tokenData.decoded.expTokenVideo) {
               window.location.assign(`https://servicehubcrm.net/#/payment-expire/${tokenData.company_id}`);
               return;
             }
-            Crm === '1' ? setName(tokenData.costumerName) : setName(tokenData.userName);
-            setDecoded(tokenData);
+            Crm === '1' ? setName(tokenData.decode.costumerName) : setName(tokenData.decode.userName);
+            setDecoded(tokenData.decode);
           } else {
             window.alert('You do not have permission to make video call');
           }
@@ -68,6 +49,7 @@ export default function PreJoinScreens() {
       if (user?.displayName) {
         setStep(Steps.deviceSelectionStep);
       }
+      return;
     }
   }, [user, URLRoomName, Crm]);
 

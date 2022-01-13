@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-
-import Button from '@material-ui/core/Button';
+import { Button } from '@material-ui/core';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import { isMobile } from '../../utils';
 import Menu from './Menu/Menu';
@@ -11,7 +10,10 @@ import { Typography, Grid, Hidden } from '@material-ui/core';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
+import VideoPictureButton from '../Buttons/VideoPictureButton/VideoPictureButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
+import { useParams } from 'react-router-dom';
+import FirebaseApp from '../../state/useFirebaseAuth/FirebaseApp';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -63,11 +65,23 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function MenuBar() {
+  const { URLRoomName } = useParams();
   const classes = useStyles();
   const { isSharingScreen, toggleScreenShare } = useVideoContext();
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
+
+  const [items, setItems] = useState({});
+  const [order, setOrder] = useState({});
+  useEffect(() => {
+    FirebaseApp()
+      .tokenDataCrm(URLRoomName)
+      .then((data: any) => {
+        setItems(data.data.items);
+        setOrder(data.data.o_id);
+      });
+  }, [URLRoomName]);
 
   return (
     <>
@@ -88,6 +102,7 @@ export default function MenuBar() {
             <Grid container justifyContent="center">
               <ToggleAudioButton disabled={isReconnecting} />
               <ToggleVideoButton disabled={isReconnecting} />
+              {items && <VideoPictureButton disabled={isReconnecting} items={items} order={order} />}
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
               <Hidden smDown>

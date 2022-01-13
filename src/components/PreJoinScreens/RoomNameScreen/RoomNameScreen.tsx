@@ -135,7 +135,7 @@ export default function RoomNameScreen({
         </div>
 
         <Grid container>
-          <Grid xs={8} className={classes.CheckboxContainer}>
+          <Grid item={true} xs={8} className={classes.CheckboxContainer}>
             <Checkbox
               checked={checked}
               size="small"
@@ -149,7 +149,7 @@ export default function RoomNameScreen({
               </Link>
             </Typography>
           </Grid>
-          <Grid xs={4}>
+          <Grid item={true} xs={4}>
             <Button
               className={classes.continueButton}
               variant="contained"
