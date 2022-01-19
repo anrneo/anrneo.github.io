@@ -40,7 +40,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundImage: Swoosh,
+    //backgroundImage: Swoosh,
+    background: 'white',
     backgroundSize: 'cover',
     width: '296px',
     [theme.breakpoints.down('sm')]: {
@@ -68,7 +69,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: -30,
     left: -20,
     [theme.breakpoints.down('sm')]: {
-      width: '10px',
       display: 'none',
     },
   },
@@ -82,7 +82,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   title: {
-    color: 'white',
+    color: 'black',
+    fontFamily: 'Optima',
     margin: '1em 0 0',
     [theme.breakpoints.down('sm')]: {
       margin: 0,
@@ -115,7 +116,7 @@ const IntroContainer = (props: IntroContainerProps) => {
               </div>
               <VideoLogo />
               <Typography variant="h6" className={classes.title}>
-                Virtual Portal
+                <b> Virtual Portal</b>
               </Typography>
             </div>
           </div>
