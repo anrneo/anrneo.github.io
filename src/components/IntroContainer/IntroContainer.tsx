@@ -64,10 +64,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   twilioLogo: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    margin: '20px',
+    position: 'relative',
+    top: -30,
+    left: -20,
+    [theme.breakpoints.down('sm')]: {
+      width: '10px',
+      display: 'none',
+    },
   },
   content: {
     background: 'white',
@@ -96,7 +99,6 @@ const IntroContainer = (props: IntroContainerProps) => {
   const classes = useStyles();
   const { user } = useAppState();
   const location = useLocation();
-
   return (
     <div className={classes.background}>
       {user && location.pathname !== '/login' && <UserMenu />}
@@ -104,9 +106,16 @@ const IntroContainer = (props: IntroContainerProps) => {
         <div className={classes.innerContainer}>
           <div className={classes.swooshContainer}>
             <div className={classes.logoContainer}>
+              <div className={classes.twilioLogo}>
+                <img
+                  src="https://s3.amazonaws.com/storage.servicehubcrm.com/assets/images/logo-big-black.png"
+                  alt=""
+                  width="250px"
+                />
+              </div>
               <VideoLogo />
               <Typography variant="h6" className={classes.title}>
-                Service Hub CRM Video Call
+                Virtual Portal
               </Typography>
             </div>
           </div>
