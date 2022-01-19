@@ -68,7 +68,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     top: -30,
     [theme.breakpoints.down('sm')]: {
-      display: 'none',
+      // display: 'none',
+      top: 0,
+      position: 'relative',
+      width: '100px',
     },
   },
   content: {
@@ -106,8 +109,9 @@ const IntroContainer = (props: IntroContainerProps) => {
         <div className={classes.innerContainer}>
           <div className={classes.swooshContainer}>
             <div className={classes.logoContainer}>
-              <div className={classes.twilioLogo}>
+              <div>
                 <img
+                  className={classes.twilioLogo}
                   src="https://s3.amazonaws.com/storage.servicehubcrm.com/assets/images/logo-big-black.png"
                   alt=""
                   width="250px"
