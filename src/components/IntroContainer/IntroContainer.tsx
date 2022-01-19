@@ -67,7 +67,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   twilioLogo: {
     position: 'relative',
     top: -30,
-    left: -20,
     [theme.breakpoints.down('sm')]: {
       display: 'none',
     },
