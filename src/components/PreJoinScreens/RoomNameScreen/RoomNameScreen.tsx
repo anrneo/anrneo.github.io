@@ -18,7 +18,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: '1em',
   },
   media: {
-    width: 200,
+    maxWidth: 300,
+    maxHeight: 200,
     display: 'block',
     margin: 'auto',
   },
@@ -88,15 +89,17 @@ export default function RoomNameScreen({
   };
 
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
+  let img = document.querySelector('#CardMediaProfile');
+  img?.setAttribute('width', '200');
+  img?.setAttribute('height', '100');
+  console.log(img);
 
   return (
     <>
-      <Card style={{ marginTop: 0 }}>
-        <CardMedia
+      <Card>
+        <img
           className={classes.media}
-          component="img"
-          height="200"
-          image={'https://storage.servicehubcrm.net/dev/user_profile/' + decoded.urlLogo}
+          src={'https://storage.servicehubcrm.net/dev/user_profile/' + decoded.urlLogo}
           alt="imagen crm company"
         />
         <Typography gutterBottom variant="subtitle2" component="div" align="center">
