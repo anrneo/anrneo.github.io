@@ -89,10 +89,6 @@ export default function RoomNameScreen({
   };
 
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
-  let img = document.querySelector('#CardMediaProfile');
-  img?.setAttribute('width', '200');
-  img?.setAttribute('height', '100');
-  console.log(img);
 
   return (
     <>
