@@ -6,6 +6,7 @@ import useActiveSinkId from './useActiveSinkId/useActiveSinkId';
 import useFirebaseAuth from './useFirebaseAuth/useFirebaseAuth';
 import usePasscodeAuth from './usePasscodeAuth/usePasscodeAuth';
 import { User } from 'firebase';
+import FirebaseApp from '../state/useFirebaseAuth/FirebaseApp';
 
 export interface StateContextType {
   error: TwilioError | Error | null;
@@ -67,7 +68,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     contextValue = {
       ...contextValue,
       getToken: async (user_identity, room_name) => {
-        const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/token';
+        const endpoint = process.env.REACT_APP_TOKEN_TWILIO + '/token';
+        const dataCrm: any = await FirebaseApp().tokenDataCrm(room_name);
 
         return fetch(endpoint, {
           method: 'POST',
@@ -77,12 +79,13 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           body: JSON.stringify({
             user_identity,
             room_name,
+            statusCallback: `https://${dataCrm.data.host}/apis/twilo/video_comes_in`,
             create_conversation: process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true',
           }),
         }).then(res => res.json());
       },
       updateRecordingRules: async (room_sid, rules) => {
-        const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
+        const endpoint = process.env.REACT_APP_TOKEN_TWILIO + '/recordingrules';
 
         return fetch(endpoint, {
           headers: {
