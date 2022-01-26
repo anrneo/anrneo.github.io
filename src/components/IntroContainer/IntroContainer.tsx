@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles, Theme, Typography } from '@material-ui/core';
-import Swoosh from './swoosh';
 import VideoLogo from './VideoLogo';
 import { useAppState } from '../../state';
 import UserMenu from './UserMenu/UserMenu';
@@ -40,7 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    //backgroundImage: Swoosh,
     background: 'white',
     backgroundSize: 'cover',
     width: '296px',
