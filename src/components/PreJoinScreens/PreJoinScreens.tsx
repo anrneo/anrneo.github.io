@@ -21,6 +21,7 @@ export default function PreJoinScreens() {
   const [step, setStep] = useState(Steps.roomNameStep);
   const [name, setName] = useState<string>(user?.displayName || '');
   const [roomName, setRoomName] = useState<string>('');
+  const [host, setHost] = useState<string>('');
   const [decoded, setDecoded] = useState<object>({});
   const [mediaError, setMediaError] = useState<Error>();
 
@@ -38,6 +39,7 @@ export default function PreJoinScreens() {
             }
             Crm === '1' ? setName(tokenData.decode.costumerName) : setName(tokenData.decode.userName);
             setDecoded(tokenData.decode);
+            setHost(tokenData.data.host);
           } else {
             window.alert('You do not have permission to make video call');
           }
@@ -91,7 +93,7 @@ export default function PreJoinScreens() {
       )}
 
       {step === Steps.deviceSelectionStep && (
-        <DeviceSelectionScreen name={name} roomName={roomName} setStep={setStep} />
+        <DeviceSelectionScreen name={name} roomName={roomName} setStep={setStep} host={host} />
       )}
     </IntroContainer>
   );

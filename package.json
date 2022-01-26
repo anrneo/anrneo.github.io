@@ -81,8 +81,7 @@
   },
   "scripts": {
     "postinstall": "rimraf public/virtualbackground && copyfiles -f node_modules/@twilio/video-processors/dist/build/* public/virtualbackground",
-    "start": "concurrently npm:server npm:dev",
-    "dev": "react-scripts start",
+    "start": "react-scripts start",
     "build": "node ./scripts/build.js",
     "test": "cross-env TZ=utc jest",
     "eject": "react-scripts eject",

@@ -1,16 +1,5 @@
 import React, { ChangeEvent, FormEvent } from 'react';
-import {
-  makeStyles,
-  TextField,
-  Grid,
-  Button,
-  Typography,
-  Checkbox,
-  Theme,
-  Card,
-  CardMedia,
-  Link,
-} from '@material-ui/core';
+import { makeStyles, TextField, Grid, Button, Typography, Checkbox, Theme, Card, Link } from '@material-ui/core';
 import { useAppState } from '../../../state';
 
 const useStyles = makeStyles((theme: Theme) => ({

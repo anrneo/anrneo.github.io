@@ -6,12 +6,16 @@ import useActiveSinkId from './useActiveSinkId/useActiveSinkId';
 import useFirebaseAuth from './useFirebaseAuth/useFirebaseAuth';
 import usePasscodeAuth from './usePasscodeAuth/usePasscodeAuth';
 import { User } from 'firebase';
-import FirebaseApp from '../state/useFirebaseAuth/FirebaseApp';
 
 export interface StateContextType {
   error: TwilioError | Error | null;
   setError(error: TwilioError | Error | null): void;
-  getToken(name: string, room: string, passcode?: string): Promise<{ room_type: RoomType; token: string }>;
+  getToken(
+    name: string,
+    room: string,
+    host: string,
+    passcode?: string
+  ): Promise<{ room_type: RoomType; token: string }>;
   user?: User | null | { displayName: undefined; photoURL: undefined; passcode?: string };
   signIn?(passcode?: string): Promise<void>;
   signOut?(): Promise<void>;
@@ -67,9 +71,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
   } else {
     contextValue = {
       ...contextValue,
-      getToken: async (user_identity, room_name) => {
+      getToken: async (user_identity, room_name, host) => {
         const endpoint = process.env.REACT_APP_TOKEN_TWILIO + '/token';
-        const dataCrm: any = await FirebaseApp().tokenDataCrm(room_name);
 
         return fetch(endpoint, {
           method: 'POST',
@@ -79,7 +82,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           body: JSON.stringify({
             user_identity,
             room_name,
-            statusCallback: `https://${dataCrm.data.host}/apis/twilo/video_comes_in`,
+            statusCallback: `https://${host}/apis/twilo/video_comes_in`,
             create_conversation: process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true',
           }),
         }).then(res => res.json());
@@ -112,10 +115,10 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     };
   }
 
-  const getToken: StateContextType['getToken'] = (name, room) => {
+  const getToken: StateContextType['getToken'] = (name, room, host) => {
     setIsFetching(true);
     return contextValue
-      .getToken(name, room)
+      .getToken(name, room, host)
       .then(res => {
         setRoomType(res.room_type);
         setIsFetching(false);
