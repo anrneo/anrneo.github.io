@@ -6,6 +6,7 @@ import useActiveSinkId from './useActiveSinkId/useActiveSinkId';
 import useFirebaseAuth from './useFirebaseAuth/useFirebaseAuth';
 import usePasscodeAuth from './usePasscodeAuth/usePasscodeAuth';
 import { User } from 'firebase';
+import FirebaseApp from '../state/useFirebaseAuth/FirebaseApp';
 
 export interface StateContextType {
   error: TwilioError | Error | null;
@@ -14,8 +15,9 @@ export interface StateContextType {
     name: string,
     room: string,
     host: string,
+    URLRoomName: string | undefined,
     passcode?: string
-  ): Promise<{ room_type: RoomType; token: string }>;
+  ): Promise<{ room_type: RoomType; token: string; roomSid: string }>;
   user?: User | null | { displayName: undefined; photoURL: undefined; passcode?: string };
   signIn?(passcode?: string): Promise<void>;
   signOut?(): Promise<void>;
@@ -115,11 +117,23 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     };
   }
 
-  const getToken: StateContextType['getToken'] = (name, room, host) => {
+  const getToken: StateContextType['getToken'] = (name, room, host, URLRoomName) => {
     setIsFetching(true);
     return contextValue
-      .getToken(name, room, host)
+      .getToken(name, room, host, URLRoomName)
       .then(res => {
+        const callback = `https://${host}/apis/twilo/video_comes_in`;
+        fetch(`https://videochat-7252.twil.io/mediavideo?rm=${res.roomSid}&callback=${callback}`)
+          .then(response => {
+            return response.json();
+          })
+          .then(datavideo => {
+            const link = `https://SK9f831e2b412d713de37cfc55a8cea11b:qTjghG0SSdH5qU0joh5H8lFA993KugZm@${
+              datavideo.result.links.media.split('//')[1]
+            }`;
+            FirebaseApp().update(URLRoomName, { rm: res.roomSid, link: link });
+          });
+
         setRoomType(res.room_type);
         setIsFetching(false);
         return res;

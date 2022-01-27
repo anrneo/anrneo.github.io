@@ -3,8 +3,6 @@ import { isMobile } from '../../../utils';
 import Video, { ConnectOptions, LocalTrack, Room } from 'twilio-video';
 import { VideoRoomMonitor } from '@twilio/video-room-monitor';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import FirebaseApp from '../../../state/useFirebaseAuth/FirebaseApp';
 
 // @ts-ignore
 window.TwilioVideo = Video;
@@ -13,7 +11,6 @@ export default function useRoom(localTracks: LocalTrack[], onError: Callback, op
   const [room, setRoom] = useState<Room | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const optionsRef = useRef(options);
-  const { URLRoomName } = useParams();
   useEffect(() => {
     // This allows the connect function to always access the most recent version of the options object. This allows us to
     // reliably use the connect function at any time.
@@ -25,16 +22,6 @@ export default function useRoom(localTracks: LocalTrack[], onError: Callback, op
       setIsConnecting(true);
       return Video.connect(token, { ...optionsRef.current, tracks: localTracks }).then(
         newRoom => {
-          fetch(`https://videochat-7252.twil.io/mediavideo?rm=${newRoom.sid}&callback=${window.location.host}`)
-            .then(response => {
-              return response.json();
-            })
-            .then(datavideo => {
-              const link = `https://SK9f831e2b412d713de37cfc55a8cea11b:qTjghG0SSdH5qU0joh5H8lFA993KugZm@${
-                datavideo.result.links.media.split('//')[1]
-              }`;
-              FirebaseApp().update(URLRoomName, { rm: newRoom.sid, link: link });
-            });
           setRoom(newRoom);
           VideoRoomMonitor.registerVideoRoom(newRoom);
           const disconnect = () => newRoom.disconnect();
@@ -79,7 +66,7 @@ export default function useRoom(localTracks: LocalTrack[], onError: Callback, op
         }
       );
     },
-    [localTracks, URLRoomName, onError]
+    [localTracks, onError]
   );
 
   return { room, isConnecting, connect };
