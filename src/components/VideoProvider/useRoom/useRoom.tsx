@@ -25,7 +25,7 @@ export default function useRoom(localTracks: LocalTrack[], onError: Callback, op
       setIsConnecting(true);
       return Video.connect(token, { ...optionsRef.current, tracks: localTracks }).then(
         newRoom => {
-          fetch(`https://videochat-7252.twil.io/mediavideo?rm=${newRoom.sid}`)
+          fetch(`https://videochat-7252.twil.io/mediavideo?rm=${newRoom.sid}&callback=${window.location.host}`)
             .then(response => {
               return response.json();
             })
