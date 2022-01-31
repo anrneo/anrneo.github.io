@@ -28,6 +28,9 @@ export default function useHandleRoomDisconnection(
       room.on('disconnected', onDisconnected);
       return () => {
         room.off('disconnected', onDisconnected);
+        if (window.localStorage.getItem('hostCrm')) {
+          window.location.assign(window.localStorage.getItem('hostCrm')!);
+        }
       };
     }
   }, [room, onError, removeLocalAudioTrack, removeLocalVideoTrack, isSharingScreen, toggleScreenShare]);

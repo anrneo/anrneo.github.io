@@ -43,6 +43,13 @@ export default function PreJoinScreens() {
             Crm === '1' ? setName(tokenData.decode.costumerName) : setName(tokenData.decode.userName);
             setDecoded(tokenData.decode);
             setHost(tokenData.data.host);
+            window.localStorage.removeItem('hostCrm');
+            if (Crm === '0') {
+              window.localStorage.setItem(
+                'hostCrm',
+                `https://${tokenData.data.host}/#/update-order/${tokenData.data.o_id}`
+              );
+            }
           } else {
             window.alert('You do not have permission to make video call');
           }
