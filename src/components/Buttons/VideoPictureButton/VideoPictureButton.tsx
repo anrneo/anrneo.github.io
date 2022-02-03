@@ -1,10 +1,12 @@
 import React from 'react';
 import AWS from 'aws-sdk';
+import produce from 'immer';
 import { Button, Menu, MenuItem, styled, Backdrop, CircularProgress } from '@material-ui/core';
 import BackgroundIcon from '../../../icons/BackgroundIcon';
 import useDevices from '../../../hooks/useDevices/useDevices';
-import { useParams } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
 import FirebaseApp from '../../../state/useFirebaseAuth/FirebaseApp';
+import { getColl } from '../../../redux/firebaseSlice';
 
 AWS.config.update({
   accessKeyId: 'AKIARHRZ6OGLTYBT5HPV',
@@ -22,17 +24,14 @@ export const IconContainer = styled('div')({
   marginRight: '0.3em',
 });
 
-export default function VideoPictureButton(props: {
-  disabled?: boolean;
-  className?: string;
-  items?: any;
-  order?: any;
-}) {
-  const { URLRoomName } = useParams();
+export default function VideoPictureButton(props: { disabled?: boolean; className?: string }) {
+  const dispatch = useAppDispatch();
   const { hasVideoInputDevices } = useDevices();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openBack, setOpen] = React.useState(false);
-
+  const urlParams: any = useAppSelector(state => state.collection.params);
+  const collection: any = useAppSelector(state => state.collection.list);
+  const items = collection.tokenData.data.items;
   const handleCloseBack = () => {
     setOpen(false);
   };
@@ -41,8 +40,8 @@ export default function VideoPictureButton(props: {
     setAnchorEl(event.currentTarget);
   };
 
-  function menuItems(items: any) {
-    let listmenu = props.items.map((item: any, i: number) => {
+  function menuItems() {
+    let listmenu = items.map((item: any, i: number) => {
       return <MenuItem key={item.id} value={item.id} onClick={handleClose}>{`Item${i + 1} - ${item.title}`}</MenuItem>;
     });
     return listmenu;
@@ -56,19 +55,17 @@ export default function VideoPictureButton(props: {
   const VideoPicture = (id: number) => {
     setOpen(true);
     let video = document.querySelector('video');
-
+    const o_id = collection.tokenData.data.o_id;
     let canvas = document.createElement('canvas');
     canvas.setAttribute('width', '300');
     canvas.setAttribute('height', '250');
     if (video) {
       canvas.getContext('2d')?.drawImage(video, 0, 0, canvas.width, canvas.height);
-      let blob = canvas.toBlob(function(blob) {
+      let blobFile = canvas.toBlob(function(blob) {
         if (blob) {
-          let file = new File(
-            [blob],
-            `${id}_${props.order}_${Math.floor(Math.random() * 1000000000)}_videocallcrm.jpg`,
-            { type: 'image/jpeg' }
-          );
+          let file = new File([blob], `${id}_${o_id}_${Math.floor(Math.random() * 1000000000)}_videocallcrm.jpg`, {
+            type: 'image/jpeg',
+          });
 
           let params = {
             ACL: 'public-read',
@@ -81,13 +78,17 @@ export default function VideoPictureButton(props: {
             .putObject(params)
             .promise()
             .then(res => {
-              let index = props.items.findIndex((x: any) => x.id == id);
-              if (props.items[index].images) {
-                props.items[index].images.push(file.name);
-              } else {
-                props.items[index].images = [file.name];
-              }
-              FirebaseApp().update(URLRoomName, { items: props.items });
+              const tokenData: any = produce(collection, (draftState: any) => {
+                let index = draftState.tokenData.data.items.findIndex((x: any) => Number(x.id) === id);
+                if (draftState.tokenData.data.items[index].images) {
+                  draftState.tokenData.data.items[index].images.push(file.name);
+                } else {
+                  draftState.tokenData.data.items[index].images = [file.name];
+                }
+                return draftState;
+              });
+              dispatch(getColl(tokenData));
+              FirebaseApp().update(urlParams.data.URLRoomName, { items: tokenData.tokenData.data.items });
               setOpen(false);
             })
             .catch(err => {
@@ -130,7 +131,7 @@ export default function VideoPictureButton(props: {
         }}
       >
         {' '}
-        {props.items.length && menuItems(props.items)}
+        {items.length && menuItems()}
       </Menu>
     </div>
   );

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import EndCallButton from '../Buttons/EndCallButton/EndCallButton';
 import { isMobile } from '../../utils';
 import Menu from './Menu/Menu';
+import { useAppSelector } from '../../redux/hooks';
 import useRoomState from '../../hooks/useRoomState/useRoomState';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { Typography, Grid, Hidden } from '@material-ui/core';
@@ -12,8 +13,6 @@ import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import VideoPictureButton from '../Buttons/VideoPictureButton/VideoPictureButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
-import { useParams } from 'react-router-dom';
-import FirebaseApp from '../../state/useFirebaseAuth/FirebaseApp';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,23 +64,14 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function MenuBar() {
-  const { URLRoomName, Crm } = useParams();
   const classes = useStyles();
   const { isSharingScreen, toggleScreenShare } = useVideoContext();
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
-
-  const [items, setItems] = useState({});
-  const [order, setOrder] = useState({});
-  useEffect(() => {
-    FirebaseApp()
-      .tokenDataCrm(URLRoomName)
-      .then((data: any) => {
-        setItems(data.data.items);
-        setOrder(data.data.o_id);
-      });
-  }, [URLRoomName]);
+  const params: any = useAppSelector(state => state.collection.params);
+  const collection: any = useAppSelector(state => state.collection.list);
+  const items = collection.tokenData.data.items;
 
   return (
     <>
@@ -102,7 +92,7 @@ export default function MenuBar() {
             <Grid container justifyContent="center">
               <ToggleAudioButton disabled={isReconnecting} />
               <ToggleVideoButton disabled={isReconnecting} />
-              {items && Crm == '0' && <VideoPictureButton disabled={isReconnecting} items={items} order={order} />}
+              {items && params.data.Crm === '0' && <VideoPictureButton disabled={isReconnecting} />}
               {!isSharingScreen && !isMobile && <ToggleScreenShareButton disabled={isReconnecting} />}
               {process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && <ToggleChatButton />}
               <Hidden smDown>

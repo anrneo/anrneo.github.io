@@ -16,6 +16,8 @@ import { ChatProvider } from './components/ChatProvider';
 import { VideoProvider } from './components/VideoProvider';
 import useConnectionOptions from './utils/useConnectionOptions/useConnectionOptions';
 import UnsupportedBrowserWarning from './components/UnsupportedBrowserWarning/UnsupportedBrowserWarning';
+import { store } from './redux/store';
+import { Provider } from 'react-redux';
 
 const VideoApp = () => {
   const { error, setError } = useAppState();
@@ -37,18 +39,20 @@ ReactDOM.render(
     <UnsupportedBrowserWarning>
       <Router>
         <AppStateProvider>
-          <Switch>
-            <PrivateRoute exact path="/:URLRoomName/:Crm">
-              <VideoApp />
-            </PrivateRoute>
-            <PrivateRoute path="/room/:URLRoomName/:Crm">
-              <VideoApp />
-            </PrivateRoute>
-            <Route path="/login">
-              <LoginPage />
-            </Route>
-            <Redirect to="/" />
-          </Switch>
+          <Provider store={store}>
+            <Switch>
+              <PrivateRoute exact path="/:URLRoomName/:Crm">
+                <VideoApp />
+              </PrivateRoute>
+              <PrivateRoute path="/room/:URLRoomName/:Crm">
+                <VideoApp />
+              </PrivateRoute>
+              <Route path="/login">
+                <LoginPage />
+              </Route>
+              <Redirect to="/" />
+            </Switch>
+          </Provider>
         </AppStateProvider>
       </Router>
     </UnsupportedBrowserWarning>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, FormEvent } from 'react';
+import { useAppDispatch } from '../../redux/hooks';
 import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
 import IntroContainer from '../IntroContainer/IntroContainer';
 import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
@@ -8,48 +9,49 @@ import { useParams } from 'react-router-dom';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import moment from 'moment';
 import FirebaseApp from '../../state/useFirebaseAuth/FirebaseApp';
+import { getColl, getParams } from '../../redux/firebaseSlice';
 
 export enum Steps {
   roomNameStep,
   deviceSelectionStep,
 }
 
+interface Params {
+  URLRoomName: string;
+  Crm: string;
+}
+
 export default function PreJoinScreens() {
   const { user } = useAppState();
   const { getAudioAndVideoTracks } = useVideoContext();
-  const { URLRoomName, Crm } = useParams();
+  const params = useParams<Params>();
   const [step, setStep] = useState(Steps.roomNameStep);
   const [name, setName] = useState<string>(user?.displayName || '');
   const [roomName, setRoomName] = useState<string>('');
-  const [host, setHost] = useState<string>('');
   const [decoded, setDecoded] = useState<object>({});
   const [mediaError, setMediaError] = useState<Error>();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (URLRoomName) {
-      setRoomName(URLRoomName);
+    if (params.URLRoomName) {
+      setRoomName(params.URLRoomName);
       FirebaseApp()
-        .tokenDataCrm(URLRoomName)
+        .tokenDataCrm(params.URLRoomName)
         .then((tokenData: any) => {
           if (tokenData) {
+            dispatch(getParams({ data: params }));
+            dispatch(getColl({ tokenData }));
             const hour = (tokenData.decode.expTokenVideo - moment.utc().valueOf() / 1000) / 3600;
             if (
               process.env.NODE_ENV === 'production' &&
-              (hour < 0 || tokenData.data.expTokenVideo != tokenData.decode.expTokenVideo)
+              (hour < 0 || tokenData.data.expTokenVideo !== tokenData.decode.expTokenVideo)
             ) {
               window.location.assign(`https://servicehubcrm.net/#/payment-expire/${tokenData.decode.company_id}`);
               return;
             }
-            Crm === '1' ? setName(tokenData.decode.costumerName) : setName(tokenData.decode.userName);
+            params.Crm === '1' ? setName(tokenData.decode.costumerName) : setName(tokenData.decode.userName);
+
             setDecoded(tokenData.decode);
-            setHost(tokenData.data.host);
-            window.localStorage.removeItem('hostCrm');
-            if (Crm === '0') {
-              window.localStorage.setItem(
-                'hostCrm',
-                `https://${tokenData.data.host}/#/update-order/${tokenData.data.o_id}`
-              );
-            }
           } else {
             window.alert('You do not have permission to make video call');
           }
@@ -63,7 +65,7 @@ export default function PreJoinScreens() {
       }
       return;
     }
-  }, [user, URLRoomName, Crm]);
+  }, [user, params, dispatch]);
 
   useEffect(() => {
     if (step === Steps.deviceSelectionStep && !mediaError) {
@@ -82,7 +84,7 @@ export default function PreJoinScreens() {
       window.history.replaceState(
         null,
         '',
-        window.encodeURI(`/room/${roomName}/${Crm}${window.location.search || ''}`)
+        window.encodeURI(`/room/${roomName}/${params.Crm}${window.location.search || ''}`)
       );
     }
     setStep(Steps.deviceSelectionStep);
@@ -103,7 +105,7 @@ export default function PreJoinScreens() {
       )}
 
       {step === Steps.deviceSelectionStep && (
-        <DeviceSelectionScreen name={name} roomName={roomName} setStep={setStep} host={host} />
+        <DeviceSelectionScreen name={name} roomName={roomName} setStep={setStep} />
       )}
     </IntroContainer>
   );

@@ -26,6 +26,11 @@ const Main = styled('main')(({ theme }: { theme: Theme }) => ({
 }));
 
 export default function App() {
+  if (window.localStorage.getItem('hostCrm')) {
+    const hostCrm = window.localStorage.getItem('hostCrm');
+    window.localStorage.removeItem('hostCrm');
+    window.location.assign(hostCrm!);
+  }
   const roomState = useRoomState();
 
   // Here we would like the height of the main container to be the height of the viewport.
