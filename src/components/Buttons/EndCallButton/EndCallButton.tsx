@@ -26,12 +26,11 @@ export default function EndCallButton(props: { className?: string }) {
 
   const handleClose = () => {
     room!.disconnect();
-    if (urlParams.data.Crm === '0') {
-      window.localStorage.setItem(
-        'hostCrm',
-        `https://${collection.tokenData.data.host}/#/update-order/${collection.tokenData.data.o_id}`
-      );
-    }
+    let url = '';
+    if (urlParams.data.Crm === '0')
+      url = `https://${collection.tokenData.data.host}/#/update-order/${collection.tokenData.data.o_id}`;
+    else url = 'https://servicetechnologies.com/';
+    window.localStorage.setItem('hostCrm', url);
   };
 
   return (
