@@ -63,6 +63,7 @@ export default function PreJoinScreens() {
       if (user?.displayName) {
         setStep(Steps.deviceSelectionStep);
       }
+      fetch('https://videochat-7252.twil.io/delmedia');
       return;
     }
   }, [user, params, dispatch]);
