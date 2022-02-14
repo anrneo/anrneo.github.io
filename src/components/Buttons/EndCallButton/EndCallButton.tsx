@@ -29,7 +29,7 @@ export default function EndCallButton(props: { className?: string }) {
     let url = '';
     if (urlParams.data.Crm === '0')
       url = `https://${collection.tokenData.data.host}/#/update-order/${collection.tokenData.data.o_id}`;
-    else url = 'https://servicetechnologies.com/';
+    else url = '/disconnect';
     window.localStorage.setItem('hostCrm', url);
   };
 
