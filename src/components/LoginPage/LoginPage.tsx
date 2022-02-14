@@ -1,17 +1,5 @@
-import * as React from 'react';
-import {
-  makeStyles,
-  Theme,
-  CardContent,
-  CardMedia,
-  Grid,
-  Card,
-  Paper,
-  Typography,
-  CssBaseline,
-  Button,
-} from '@material-ui/core';
-import { isMobile } from '../../utils';
+import React from 'react';
+import { makeStyles, Theme, CardContent, CardMedia, Grid, Card, Paper, Button } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -31,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   CardMedia: {
     [theme.breakpoints.down('sm')]: {
-      display: 'none',
+      maxWeight: '50%',
     },
   },
 }));
@@ -41,10 +29,9 @@ export default function SignInSide() {
 
   return (
     <Grid container component="main" style={{ height: '100vh' }}>
-      <CssBaseline />
       <Grid
         item
-        xs={false}
+        xs={12}
         sm={4}
         md={7}
         style={{
@@ -55,7 +42,7 @@ export default function SignInSide() {
         }}
       />
       <Grid className={classes.CardContent} item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <Grid>
+        <Grid item xs={11}>
           <Card>
             <CardMedia
               className={classes.CardMedia}
@@ -65,11 +52,6 @@ export default function SignInSide() {
               image="/img/logo-big-black.png"
             />
             <CardContent>
-              {isMobile && (
-                <Typography className={classes.CardContent} variant="h4" gutterBottom component="div">
-                  SERVICE HUB CRM
-                </Typography>
-              )}
               <Button className={classes.button}>Call has been disconnected</Button>
             </CardContent>
           </Card>
