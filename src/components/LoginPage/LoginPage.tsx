@@ -1,5 +1,4 @@
 import * as React from 'react';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {
   makeStyles,
   Theme,
@@ -9,12 +8,8 @@ import {
   Card,
   Paper,
   Typography,
-  Checkbox,
-  FormControlLabel,
-  TextField,
   CssBaseline,
   Button,
-  Avatar,
 } from '@material-ui/core';
 import { isMobile } from '../../utils';
 
