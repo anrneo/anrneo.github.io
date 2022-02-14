@@ -47,7 +47,7 @@ ReactDOM.render(
               <PrivateRoute path="/room/:URLRoomName/:Crm">
                 <VideoApp />
               </PrivateRoute>
-              <Route path="/login">
+              <Route path="/disconnect">
                 <LoginPage />
               </Route>
               <Redirect to="/" />
