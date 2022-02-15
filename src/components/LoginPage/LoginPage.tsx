@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles, Theme, CardContent, CardMedia, Grid, Card, Paper, Button } from '@material-ui/core';
-import { isMobile } from '../../utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
