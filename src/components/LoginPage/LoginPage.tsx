@@ -17,9 +17,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     display: 'flex',
   },
-  CardMedia: {
-    [theme.breakpoints.down('sm')]: {},
-  },
 }));
 
 export default function SignInSide() {
@@ -42,13 +39,7 @@ export default function SignInSide() {
       <Grid className={classes.CardContent} item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
         <Grid item>
           <Card>
-            <CardMedia
-              className={classes.CardMedia}
-              component="img"
-              alt="green iguana"
-              height="330"
-              image="/img/logo-big-black.png"
-            />
+            <CardMedia component="img" alt="green iguana" height="330" image="/img/logo-big-black.png" />
             <CardContent>
               <Button className={classes.button}>Call has been disconnected</Button>
             </CardContent>
