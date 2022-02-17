@@ -5,6 +5,7 @@ import { useAppSelector } from '../../../redux/hooks';
 import { Button } from '@material-ui/core';
 
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import FirebaseApp from '../../../state/useFirebaseAuth/FirebaseApp';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,8 +28,10 @@ export default function EndCallButton(props: { className?: string }) {
   const handleClose = () => {
     room!.disconnect();
     let url = '';
-    if (urlParams.data.Crm === '0') url = `${collection.tokenData.decode.urlBase}`;
-    else url = `/disconnect?logo=${collection.tokenData.decode.urlLogo}`;
+    if (urlParams.data.Crm === '0') {
+      FirebaseApp().update(urlParams.data.URLRoomName, { closed: true });
+      url = `${collection.tokenData.decode.urlBase}`;
+    } else url = `/disconnect?logo=${collection.tokenData.decode.urlLogo}`;
     window.localStorage.setItem('hostCrm', url);
   };
 

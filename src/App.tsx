@@ -46,7 +46,8 @@ export default function App() {
   useEffect(() => {
     (async () => {
       const tokenData = await FirebaseApp().tokenDataCrm(params.URLRoomName);
-      if (tokenData === false) window.alert('You do not have permission to make video call');
+      if (tokenData === false) return window.alert('You do not have permission to make video call');
+      if (tokenData?.data?.closed) return window.location.assign(`/disconnect?logo=${tokenData.decode.urlLogo}`);
       dispatch(getColl({ tokenData }));
       dispatch(getParams({ data: params }));
     })();
@@ -55,7 +56,6 @@ export default function App() {
   if (window.localStorage.getItem('hostCrm')) {
     const hostCrm = window.localStorage.getItem('hostCrm');
     window.localStorage.removeItem('hostCrm');
-    console.log(hostCrm?.includes('/disconnect'));
 
     if (hostCrm?.includes(`/disconnect`)) {
       window.history.replaceState(null, '', window.encodeURI(`/disconnect${window.location.search || ''}`));
