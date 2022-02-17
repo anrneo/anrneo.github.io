@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { styled, Theme } from '@material-ui/core/styles';
-
 import MenuBar from './components/MenuBar/MenuBar';
 import MobileTopMenuBar from './components/MobileTopMenuBar/MobileTopMenuBar';
 import PreJoinScreens from './components/PreJoinScreens/PreJoinScreens';
@@ -9,6 +8,10 @@ import RecordingNotifications from './components/RecordingNotifications/Recordin
 import Room from './components/Room/Room';
 
 import useHeight from './hooks/useHeight/useHeight';
+import { useParams } from 'react-router-dom';
+import FirebaseApp from './state/useFirebaseAuth/FirebaseApp';
+import { useAppDispatch } from './redux/hooks';
+import { getColl, getParams } from './redux/firebaseSlice';
 import useRoomState from './hooks/useRoomState/useRoomState';
 
 const Container = styled('div')({
@@ -25,21 +28,42 @@ const Main = styled('main')(({ theme }: { theme: Theme }) => ({
   },
 }));
 
-export default function App() {
-  if (window.localStorage.getItem('hostCrm')) {
-    const hostCrm = window.localStorage.getItem('hostCrm');
-    window.localStorage.removeItem('hostCrm');
-    window.location.assign(hostCrm!);
-  }
-  const roomState = useRoomState();
+interface Params {
+  URLRoomName: string;
+  Crm: string;
+}
 
+export default function App() {
+  const height = useHeight();
+  const params = useParams<Params>();
+  const dispatch = useAppDispatch();
   // Here we would like the height of the main container to be the height of the viewport.
   // On some mobile browsers, 'height: 100vh' sets the height equal to that of the screen,
   // not the viewport. This looks bad when the mobile browsers location bar is open.
   // We will dynamically set the height with 'window.innerHeight', which means that this
   // will look good on mobile browsers even after the location bar opens or closes.
-  const height = useHeight();
 
+  useEffect(() => {
+    (async () => {
+      const tokenData = await FirebaseApp().tokenDataCrm(params.URLRoomName);
+      if (tokenData === false) window.alert('You do not have permission to make video call');
+      dispatch(getColl({ tokenData }));
+      dispatch(getParams({ data: params }));
+    })();
+  }, [params, dispatch]);
+
+  if (window.localStorage.getItem('hostCrm')) {
+    const hostCrm = window.localStorage.getItem('hostCrm');
+    window.localStorage.removeItem('hostCrm');
+    console.log(hostCrm?.includes('/disconnect'));
+
+    if (hostCrm?.includes(`/disconnect`)) {
+      window.history.replaceState(null, '', window.encodeURI(`/disconnect${window.location.search || ''}`));
+    }
+    window.location.assign(hostCrm!);
+  }
+
+  const roomState = useRoomState();
   return (
     <Container style={{ height }}>
       {roomState === 'disconnected' ? (

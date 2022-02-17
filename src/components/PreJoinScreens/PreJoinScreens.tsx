@@ -1,72 +1,59 @@
 import React, { useState, useEffect, FormEvent } from 'react';
-import { useAppDispatch } from '../../redux/hooks';
 import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
 import IntroContainer from '../IntroContainer/IntroContainer';
 import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
 import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 import { useAppState } from '../../state';
-import { useParams } from 'react-router-dom';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import moment from 'moment';
-import FirebaseApp from '../../state/useFirebaseAuth/FirebaseApp';
-import { getColl, getParams } from '../../redux/firebaseSlice';
+
+import { useAppSelector } from '../../redux/hooks';
 
 export enum Steps {
   roomNameStep,
   deviceSelectionStep,
 }
 
-interface Params {
-  URLRoomName: string;
-  Crm: string;
-}
-
 export default function PreJoinScreens() {
   const { user } = useAppState();
   const { getAudioAndVideoTracks } = useVideoContext();
-  const params = useParams<Params>();
   const [step, setStep] = useState(Steps.roomNameStep);
   const [name, setName] = useState<string>(user?.displayName || '');
   const [roomName, setRoomName] = useState<string>('');
   const [decoded, setDecoded] = useState<object>({});
   const [mediaError, setMediaError] = useState<Error>();
-  const dispatch = useAppDispatch();
+  const urlParams = useAppSelector<any>(state => state.collection.params);
+  const collection = useAppSelector<any>(state => state.collection.list);
 
   useEffect(() => {
-    if (params.URLRoomName) {
-      setRoomName(params.URLRoomName);
-      FirebaseApp()
-        .tokenDataCrm(params.URLRoomName)
-        .then((tokenData: any) => {
-          if (tokenData) {
-            dispatch(getParams({ data: params }));
-            dispatch(getColl({ tokenData }));
-            const hour = (tokenData.decode.expTokenVideo - moment.utc().valueOf() / 1000) / 3600;
-            if (
-              process.env.NODE_ENV === 'production' &&
-              (hour < 0 || tokenData.data.expTokenVideo !== tokenData.decode.expTokenVideo)
-            ) {
-              window.location.assign(`https://servicehubcrm.net/#/payment-expire/${tokenData.decode.company_id}`);
-              return;
-            }
-            params.Crm === '1' ? setName(tokenData.decode.costumerName) : setName(tokenData.decode.userName);
+    if (urlParams.data && collection.tokenData) {
+      setRoomName(urlParams.data.URLRoomName);
 
-            setDecoded(tokenData.decode);
-          } else {
-            window.alert('You do not have permission to make video call');
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      const hour = (collection.tokenData.decode.expTokenVideo - moment.utc().valueOf() / 1000) / 3600;
+
+      if (
+        process.env.NODE_ENV === 'production' &&
+        (hour < 0 || collection.tokenData.data.expTokenVideo !== collection.tokenData.decode.expTokenVideo)
+      ) {
+        window.location.assign(`https://servicehubcrm.net/#/payment-expire/${collection.tokenData.decode.company_id}`);
+        return;
+      }
+
+      urlParams.data.Crm === '1'
+        ? setName(collection.tokenData.decode.costumerName)
+        : setName(collection.tokenData.decode.userName);
+
+      setDecoded(collection.tokenData.decode);
 
       if (user?.displayName) {
         setStep(Steps.deviceSelectionStep);
       }
+
       fetch('https://videochat-7252.twil.io/delmedia');
+
       return;
     }
-  }, [user, params, dispatch]);
+  }, [user, collection, urlParams]);
 
   useEffect(() => {
     if (step === Steps.deviceSelectionStep && !mediaError) {
@@ -80,12 +67,13 @@ export default function PreJoinScreens() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
     if (!window.location.origin.includes('twil.io')) {
       window.history.replaceState(
         null,
         '',
-        window.encodeURI(`/room/${roomName}/${params.Crm}${window.location.search || ''}`)
+        window.encodeURI(`/room/${roomName}/${urlParams.data.Crm}${window.location.search || ''}`)
       );
     }
     setStep(Steps.deviceSelectionStep);

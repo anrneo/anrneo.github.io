@@ -27,9 +27,8 @@ export default function EndCallButton(props: { className?: string }) {
   const handleClose = () => {
     room!.disconnect();
     let url = '';
-    if (urlParams.data.Crm === '0')
-      url = `https://${collection.tokenData.data.host}/#/update-order/${collection.tokenData.data.o_id}`;
-    else url = '/disconnect';
+    if (urlParams.data.Crm === '0') url = `${collection.tokenData.decode.urlBase}`;
+    else url = `/disconnect?logo=${collection.tokenData.decode.urlLogo}`;
     window.localStorage.setItem('hostCrm', url);
   };
 

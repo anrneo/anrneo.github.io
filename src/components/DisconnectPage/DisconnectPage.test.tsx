@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginPage from './LoginPage';
+import LoginPage from './DisconnectPage';
 import { act, fireEvent, render, waitForElement } from '@testing-library/react';
 import { useAppState } from '../../state';
 import { useLocation, useHistory } from 'react-router-dom';
