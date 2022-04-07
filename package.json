@@ -2,7 +2,7 @@
   "name": "twilio-video-app-react",
   "version": "0.7.0",
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "private": true,
   "license": "Apache-2.0",
