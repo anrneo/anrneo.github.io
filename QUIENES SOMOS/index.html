@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿QUIENES SOMOS?</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
+        </style>
+</head>
+<body class="fondo">
+    <ul class="menu">
+        <li><a href="../INICIO/index.html">INICIO</a></li>
+        <li>
+            <div class="dropdown">
+                <a class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    ¿QUIENES SOMOS?
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <li><a class="dropdown-item" href="../QUIENES SOMOS/index.html#quienessomos">Historia</a></li>
+                  <div>
+                      <li><a class="dropdown-item" href="../QUIENES SOMOS/index.html#mision">Misión</a></li>
+
+                  </div>
+                  <li><a class="dropdown-item" href="../QUIENES SOMOS/index.html#vision">Visión</a></li>
+                  <li><a class="dropdown-item" href="../QUIENES SOMOS/index.html#nuestroslogan">Nuestro Eslogan</a></li>
+                </ul>
+              </div>
+        </li>
+        <li><a href="../SERVICIOS/index.html">SERVICIOS</a></li>
+        <li><a href="../KIT/index.html" id="kitOpen" style="display: none;">KIT</a></li>
+            <li><a  href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" id="clickkit">KIT</a></li>
+        <li><a href="../ASESORES/index.html">ASESORES</a></li>
+        <li><a href="../MAS/index.html">MAS</a></li>
+    </ul>
+    <img class="logo1" src="./img/logo2.jpeg" >
+    <p class="lol1">K.M.B.</p>
+    <div class="container d-flex justify-content-center">
+        <br>
+        <div class="card border-secondary mb-3" style="width: 50%;">
+            <br>
+            <div class="card-body col" id="quienessomos">
+              <h5 class="card-title">¿QUIENES SOMOS?</h5>
+              <hr>
+              <p class="card-text" style="text-align: justify;"> Somos una empresa centrada en la que ayudamos al consumidor, 
+                buscamos educar en el area tcenologica acerca de los distintos metodos para dar mantenimineto a sus equipos electronicos desde 
+               la facilidad de sus propios hogares y sin herramientas profesionales, 
+               de esta forma ahorrandole al sonsumidor la necesidad de contratar a 
+               expertos en la materia por complicaciones sencillas de solucionar.</p>
+               <br>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="container d-flex justify-content-center">
+          <br>
+            <div class="card border-secondary mb-3" style="width: 50%;">
+                <br>
+                <div class="card-body" id="mision">
+                <h5 class="card-title">MISION</h5>
+                <hr>
+                <p class="card-text" style="text-align: justify;"> Somos una empresa centrada en la que ayudamos al consumidor,
+                    buscamos educar en el area tcenologica acerca de los distintos
+                   metodos para dar mantenimineto a sus equipos electronicos desde
+                   la facilidad de sus propios hogares y sin herramientas profesionales,
+                   de esta forma ahorrandole al sonsumidor la necesidad de contratar a 
+                   expertos en la materia por complicaciones sencillas de solucionar.</p>
+                <br>
+                </div>
+          </div>
+        </div>
+        <br>
+        <div class="container d-flex justify-content-center">
+            <br>
+              <div class="card border-secondary mb-3" style="width: 50%;">
+                  <br>
+                  <div class="card-body" id="vision">
+                  <h5 class="card-title">VISION</h5>
+                  <hr>
+                  <p class="card-text" style="text-align: justify;"> Nosotros vemos nuestra empres evolucionando a una multinacional
+                    ya que, buscamos mejorar nuestro alcance y no enfocarnos solo en mantenimiento,
+                    apuntamos a tener nuestras propias cedes donde se brinden capacitaciones basada
+                    en lo que el usuario necesite</p>
+                  <br>
+                  </div>
+            </div>
+          </div>
+          <br>
+          <div class="container d-flex justify-content-center">
+            <br>
+              <div class="card border-secondary mb-3" style="width: 50%;">
+                  <br>
+                  <div class="card-body" id="nuestroslogan">
+                  <h5 class="card-title">NUESTRO ESLOGAN</h5>
+                  <hr>
+                  <p class="card-text" style="text-align: justify;">Nuestro eslogan corresponde a que cualquier persona puede hacer cosas sin
+                    ser expertos, para eso establcen ayudas que lo puedan ayudar a aprender y
+                   tengan el poder de poder hacer un trabajo seguro, eficaz y sin gastar tanto dinero.</p>
+                  <br>
+                  </div>
+            </div>
+          </div>
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" role="alert" id="alertMsg" style="display: none;">
+                        Por favor ingresa un email valido.
+                      </div>
+                    <form id="contactForm">
+                        <div class="mb-3">
+                          <label for="exampleInputEmail1" class="form-label">Email address</label>
+                          <input type="email" class="form-control" id="exampleInputEmail1" name="exampleInputEmail1" aria-describedby="emailHelp" required>
+                          <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="exampleInputPassword1" class="form-label">Password</label>
+                          <input type="password" class="form-control" id="exampleInputPassword1" name="exampleInputPassword1"  required>
+                        </div>
+                        
+                       
+                      
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" id="closeUser" data-bs-dismiss="modal">Cerrar</button>
+                  <button type="submit" class="btn btn-primary" >Registrarse</button>
+                  <button type="button" class="btn btn-primary" id="loginUser">Login</button>
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <script  type="module" src="../data.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    
+</body>
+</html>
